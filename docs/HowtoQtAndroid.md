@@ -49,10 +49,41 @@ To add a new one, press the Add button and select Android Devices and select you
 
 It is also possible you need to install some images using the SDK Manager at Tools -> Options -> Android -> SDK Manager. For example, for Android 11, install the ARM 64 v8a and the Intel x86 Atom_64 system images.
 
-Ref: https://doc.qt.io/qtcreator/creator-developing-android.html
+Ref: https://doc.qt.io/qtcreator/creator-developing-android.html#managing-android-virtual-devices-avd
 
 ## Compiling and running on the emulator
 
-First, let's test with a QtCreator example. Go to QtCreator -> Examples and select the Example Analog Clock for Qt 5.15.2 for Android. Configure the project for your Android kit. In case of Multi-ABI, don't forget to set your target architecture on Project -> Build Settings -> Build Steps -> qmake (Details) -> ABIs. In this case, I have created a x86 emulator, so I select x86 in the field ABIs. Press the hammer to compile and press the play button, the Android Emulator should be openned and your app should start.
+First, let's test with a QtCreator example. Go to QtCreator -> Examples and select the Example Analog Clock for Qt 5.15.2 for Android. Configure the project for your Android kit. In case of Multi-ABI, don't forget to set your target architecture on Project -> <Android Qt Kit> -> Build -> Build Steps -> qmake (Details) -> ABIs. In this case, I have created a x86 emulator, so I select x86 in the field ABIs. Press the hammer to compile and press the play button, the Android Emulator should be openned and your app should start.
 
 Later, repeat the process with this application. Notice it uses the online OpenStreetMap, so it needs you have installed OpenSSL for Android as it's explained in the previous sections.
+
+## Compiling and running on a real device
+
+First, follow the next steps in the Android device:
+
+* Connect the device to the developing PC and set the mode File Transfer.
+* Enable USB Debugging on the device Developer Settings and accept any prompt.
+
+Then, on QtCreator you should now be able to select your Android device on the left-bottom corner (the button above the play button) in the Device drop-down. Select it, build and run your app.
+
+## Generating the APK
+
+Qt for Android has binaries for armv7a, arm64-v8a, x86, and x86-64. To support several different ABIs in your application, build an AAB that contains binaries for each of the ABIs. The Google Play store uses the AAB to generate optimized APK packages for the devices issuing the download request and automatically signs them with your publisher key.
+
+So, if you are going to generate an AAB package (in other words, an APK for every ABI) make sure first you are building the project for every ABI. To do it, go to Project -> <Android Qt Kit> -> Build -> Build Steps -> qmake (Details) -> ABIs and select all of them. Later, go to Project -> <Android Qt Kit> -> Build -> Build Steps -> Build Android APK (Details) and select the checkbox build Android App Bundle and Open package location after build, so we can get this AAB package. As you can see, the generated APKs and AABs are placed inside the Qt Build folder of the project at android-build/build/outputs.
+
+In case you are using OpenSSL, like it is the case of the where-is-my-car app, make sure you also check the option to include it in the APK.
+
+At this point, we already have the ABB package. Before install it in our device, let's config Qt to uninstall any previous version before install it. Go to Project -> <Android Qt Kit> -> Run -> Deploy to Android Device and check the option Uninstall the existing app before deployment.
+
+Ref: https://doc.qt.io/qtcreator/creator-deploying-android.html#packaging-applications
+
+# Intalling the APK
+
+To install the APK in the emulator or in your device (it only depends on which one you have selected as Device), simply go to Project -> <Android Qt Kit> -> Run -> Deploy to Android Device and press the button Install an APK file. Then, navigate to android-build/build/outputs/apk and select the generated APK file. 
+
+# Android Manifest
+
+To be able to set, among others, the app name, it is necessary that your project contains an Android Manifest file. To create one, you can use the Qt Android Manifest Editor: Projects -> <Android Qt Kit> -> Build -> Build Android APK (Details) -> Create Templates.
+
+Ref: https://doc.qt.io/qtcreator/creator-deploying-android.html#android-manifest-editor 

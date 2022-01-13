@@ -22,6 +22,9 @@ WhereIsMyCarApp::WhereIsMyCarApp(int& argc, char* argv[]) : QApplication(argc, a
 
   // Set Application Version
   _app->setApplicationVersion(APP_VERSION);
+
+  // Set Application Name
+  _app->setApplicationName(_constants->appTitle());
 }
 
 WhereIsMyCarApp::~WhereIsMyCarApp()
