@@ -21,23 +21,24 @@ ApplicationWindow
     property int heightMin: 50
     property int heightMax: 100
 
-    // Windows Configuration
-    title: qsTr(Constants.appTitle)
-    visible: true
-    visibility : Window.Maximized
-    x: 0
-    y: 0
-    minimumWidth: Screen.width * 0.25
-    minimumHeight: Screen.height * 0.25
-
     // Manage the app starup
     Component.onCompleted:
     {
-        // nothing for now
+        // Windows Configuration
+        title = qsTr(Constants.appTitle)
+        visible = true
+        if(Qt.platform.os !== "android")
+        {
+            visibility = Window.Maximized
+            x = 0
+            y = 0
+            minimumWidth = Screen.width * 0.25
+            minimumHeight = Screen.height * 0.25
+        }
     }
 
     /*
-        CONTENTS DIVIDED IN A SPLITVIEW
+        CONTENTS
     */
     Rectangle
     {
@@ -46,7 +47,7 @@ ApplicationWindow
         anchors.fill: parent
         color: "transparent"
 
-        // Open Street Map Plugin
+        // "Open Street Map" Plugin
         Plugin
         {
             id: osmPlugin
@@ -62,22 +63,33 @@ ApplicationWindow
             center: QtPositioning.coordinate(37.3861, -5.9926) // Seville, La Giralda
             zoomLevel: 15
 
+            // Mouse handler for Linux, Windows, ...
             MouseArea
             {
                 anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-                onClicked:
+                acceptedButtons: Qt.RightButton | Qt.LeftButton
+                onDoubleClicked:
                 {
-                    console.log("Right-clicked at " + mouse.x + ", " + mouse.y)
-                    console.log("To coordinate: " + map.toCoordinate(Qt.point(mouse.x, mouse.y)))
-                    my_car.coordinate = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-                    map.addMapItem(my_car)
+                    console.log("Right-clicked at coordinate: " + map.toCoordinate(Qt.point(mouse.x, mouse.y)))
+                    map.addCarIcon(map.toCoordinate(Qt.point(mouse.x, mouse.y)))
                 }
             }
 
-            onZoomLevelChanged:
+            // Fingers handler for Android, iOS, ...
+            TapHandler
             {
-                console.log("Zoom level changed: " + zoomLevel)
+                acceptedDevices: PointerDevice.Finger
+                onDoubleTapped:
+                {
+                    console.log("Double-tapped at coordinate: " + map.toCoordinate(Qt.point(eventPoint.position.x, eventPoint.position.y)))
+                    map.addCarIcon(map.toCoordinate(Qt.point(eventPoint.position.x, eventPoint.position.y)))
+                }
+            }
+
+            function addCarIcon(coordinates)
+            {
+                my_car.coordinate = coordinates
+                map.addMapItem(my_car)
             }
         }
 
@@ -97,8 +109,5 @@ ApplicationWindow
             anchorPoint.x: image.width/2
             anchorPoint.y: image.height/2
         }
-
-
-
     }//background
 }

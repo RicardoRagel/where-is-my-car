@@ -5,8 +5,7 @@ Simple Qt Application project to save and get the location of your car on the ma
 ## Dependencies
 
 * [Qt + QtCreator](https://www.qt.io/download). Created using Qt 5
-
-TODO
+* In case of you are using Android, make sure you have also installed Qt for Android plugin. Check [this document](docs/HowtoQtAndroid.md) for more information.
 
 ## Installation
 

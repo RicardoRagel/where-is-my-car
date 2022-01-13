@@ -28,3 +28,5 @@ RESOURCES += \
     where_is_my_car_media.qrc \
     where_is_my_car_qml.qrc
 
+## Add OpenSSL for Android
+android: include(/home/ricardo/Libraries/Android-SDK/android_openssl/openssl.pri)
