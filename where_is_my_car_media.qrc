@@ -27,5 +27,6 @@
         <file>resources/icon_app.png</file>
         <file>resources/reddit.svg</file>
         <file>resources/car.png</file>
+        <file>resources/my_position.png</file>
     </qresource>
 </RCC>

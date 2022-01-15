@@ -78,11 +78,11 @@ At this point, we already have the ABB package. Before install it in our device,
 
 Ref: https://doc.qt.io/qtcreator/creator-deploying-android.html#packaging-applications
 
-# Intalling the APK
+## Intalling the APK
 
 To install the APK in the emulator or in your device (it only depends on which one you have selected as Device), simply go to Project -> <Android Qt Kit> -> Run -> Deploy to Android Device and press the button Install an APK file. Then, navigate to android-build/build/outputs/apk and select the generated APK file. 
 
-# Android Manifest
+## Android Manifest
 
 To be able to set, among others, the app name, it is necessary that your project contains an Android Manifest file. To create one, you can use the Qt Android Manifest Editor: Projects -> <Android Qt Kit> -> Build -> Build Android APK (Details) -> Create Templates.
 
