@@ -13,11 +13,15 @@ HEADERS += \
     include/Core/WhereIsMyCarApp.h \
     include/DataLayer/Constants.h \
     include/DataLayer/DataManager.h \
+    include/DataLayer/Car.h \
+    include/DataLayer/Database.h \
     include/Utils/QmlObjectListModel.h
 
 SOURCES += \
     src/Core/WhereIsMyCarApp.cpp \
     src/DataLayer/DataManager.cpp \
+    src/DataLayer/Car.cpp \
+    src/DataLayer/Database.cpp \
     src/Utils/QmlObjectListModel.cc \
     src/main.cpp
 

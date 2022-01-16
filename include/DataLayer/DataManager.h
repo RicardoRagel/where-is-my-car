@@ -3,13 +3,10 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QString>
-#include <QDir>
 
 #include "Constants.h"
-
-// QmlObjectListModel Class, imported from the QGroundControl Project to manage easily QObject derived classes from both QML and C++ sides
-#include "QmlObjectListModel.h"
+#include "Car.h"
+#include "Database.h"
 
 using namespace std;
 
@@ -26,14 +23,24 @@ public:
   ~DataManager();
 
   // QML Properties
+  Q_PROPERTY(Car* currentCar READ currentCar NOTIFY currentCarChanged)
+
+  // QML Invokable properties getters
+  Car* currentCar() {return _current_car;}
+
+  // QML Invokable properties setters
+  Q_INVOKABLE void updateCurrentCar(QGeoCoordinate coordinates);
 
 signals:
 
   // QML Properties signals
+  void currentCarChanged();
 
 private:
 
   // Variables
+  Car* _current_car;
+  Database* _database;
 
   // Aux functions
 

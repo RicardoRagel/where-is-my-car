@@ -31,12 +31,16 @@ ApplicationWindow
         visible = true
         if(Qt.platform.os !== "android")
         {
-            visibility = Window.Maximized
+            //visibility = Window.Maximized
             x = 0
             y = 0
             minimumWidth = 640
             minimumHeight = 480
         }
+
+        // Update Current Car Position on the map with the last known
+        if(DataManager.currentCar.coordinates.latitude !== 0.0 || DataManager.currentCar.coordinates.longitude !== 0.0)
+            map.addCarIcon(DataManager.currentCar.coordinates)
     }
 
     /*
@@ -110,7 +114,7 @@ ApplicationWindow
             // Set the car position in the map
             function addCarIcon(coordinates)
             {
-                myCar.coordinate = coordinates
+                DataManager.updateCurrentCar(coordinates)
                 map.addMapItem(myCar)
             }
 
@@ -129,7 +133,7 @@ ApplicationWindow
         MapQuickItem
         {
             id: myPosition
-            coordinate: QtPositioning.coordinate(0.0, 0.0)
+            //coordinate: QtPositioning.coordinate(0.0, 0.0)
             sourceItem: Rectangle
             {
                 id: myPositionImg
@@ -148,7 +152,7 @@ ApplicationWindow
         MapQuickItem
         {
             id: myCar
-            coordinate: QtPositioning.coordinate(37.3861, -5.9926)
+            coordinate: DataManager.currentCar.coordinates
             sourceItem: Image
             {
                 id: myCarImg
