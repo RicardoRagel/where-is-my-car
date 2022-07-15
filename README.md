@@ -11,6 +11,14 @@ Simple but useful functions in case, like me, you don't have a modern car:
 * Show your current location.
 * Allow you to save your car location manually or setting it to your (device) current location.
 
+## Get it in your Android Device
+
+Download the last version of this App: 
+
+[![Download APK](https://custom-icon-badges.herokuapp.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white "Download APK")](https://github.com/RicardoRagel/where-is-my-car/releases/download/v1.0.0/where-is-my-car-v1_0_0.apk)
+
+Install it accepting all the security questions (or not, that's up to you :innocent:).
+
 ## Dependencies
 
 * [Qt + QtCreator](https://www.qt.io/download). Created using **Qt 5.15.2**
