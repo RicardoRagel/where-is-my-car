@@ -1,4 +1,4 @@
-QT += widgets qml quick location # Others usual: 3dinput positioning svg multimedia gamepad
+QT += widgets qml quick location  # Others usual: 3dinput positioning svg multimedia gamepad
 CONFIG += c++17         # C++ Version
 CONFIG += qml_debug     # Enable QML console debug
 #CONFIG += resources_big # Set this flag if your resources are big and cause a compilation error
@@ -15,6 +15,7 @@ HEADERS += \
     include/DataLayer/DataManager.h \
     include/DataLayer/Car.h \
     include/DataLayer/Database.h \
+    include/DataLayer/DeviceGeolocation.h \
     include/Utils/QmlObjectListModel.h
 
 SOURCES += \
@@ -22,6 +23,7 @@ SOURCES += \
     src/DataLayer/DataManager.cpp \
     src/DataLayer/Car.cpp \
     src/DataLayer/Database.cpp \
+    src/DataLayer/DeviceGeolocation.cpp \
     src/Utils/QmlObjectListModel.cc \
     src/main.cpp
 
@@ -33,7 +35,7 @@ RESOURCES += \
     where_is_my_car_qml.qrc
 
 ## Add OpenSSL for Android
-android: include(/home/ricardo/Libraries/Android-SDK/android_openssl/openssl.pri)
+android: include(../Android-SDK/android_openssl/openssl.pri)
 
 DISTFILES += \
     android/AndroidManifest.xml \

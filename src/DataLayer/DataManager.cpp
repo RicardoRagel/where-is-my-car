@@ -13,7 +13,11 @@ DataManager::DataManager()
   _database = new Database();
   _database->init();
 
-  // Init Current Car position to the last one known
+  // Init current device location
+  _device_location = new DeviceGeolocation(this);
+  connect(_device_location, SIGNAL(updated()), this, SIGNAL(deviceLocationChanged()));
+
+  // Init current car position to the last one known
   _current_car = new Car();
   Car* db_current_car = _database->getCurrentCar();
   if(db_current_car->coordinates().latitude() != 0.0 || db_current_car->coordinates().latitude() != 0.0)
@@ -21,6 +25,7 @@ DataManager::DataManager()
     _current_car = db_current_car;
     emit currentCarChanged();
   }
+
 }
 
 DataManager::~DataManager()

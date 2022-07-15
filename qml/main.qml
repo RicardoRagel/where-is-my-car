@@ -44,7 +44,7 @@ ApplicationWindow
     }
 
     /*
-        CONTENTS
+     * CONTENTS
     */
     Rectangle
     {
@@ -53,28 +53,15 @@ ApplicationWindow
         anchors.fill: parent
         color: "transparent"
 
+        /*
+         * MAP
+         */
         // "Open Street Map" Plugin
         Plugin
         {
             id: osmPlugin
             name: "osm"
             //PluginParameter { name: "osm.mapping.highdpi_tiles"; value: "true" }
-        }
-
-        // Currente device position
-        PositionSource
-        {
-            id: src
-            updateInterval: 1000
-            active: true
-            preferredPositioningMethods: PositionSource.AllPositioningMethods
-
-            onPositionChanged:
-            {
-                var coord = src.position.coordinate;
-                console.log("[PositionSource] Current Coordinate:", coord.longitude, coord.latitude);
-                map.addMyPositionIcon(coord)
-            }
         }
 
         // Map item
@@ -107,7 +94,6 @@ ApplicationWindow
             // Set the car position in the map
             function addMyPositionIcon(coordinates)
             {
-                myPosition.coordinate = coordinates
                 map.addMapItem(myPosition)
             }
 
@@ -122,6 +108,9 @@ ApplicationWindow
             function centerMapOnMyPosition()
             {
                 map.center = myPosition.coordinate
+
+                // Call to restart geolocation, necessary in case the app started with the device localization disabled
+                DataManager.deviceLocation.restart()
             }
             function centerMapOnMyCar()
             {
@@ -129,11 +118,15 @@ ApplicationWindow
             }
         }
 
+
+        /*
+         * MAP ICONS
+         */
         // Current position Icon
         MapQuickItem
         {
             id: myPosition
-            //coordinate: QtPositioning.coordinate(0.0, 0.0)
+            coordinate: DataManager.deviceLocation.coordinates
             sourceItem: Rectangle
             {
                 id: myPositionImg
@@ -146,6 +139,17 @@ ApplicationWindow
             }
             anchorPoint.x: myPositionImg.width/2
             anchorPoint.y: myPositionImg.height/2
+
+            Connections
+            {
+                target: DataManager
+                function onDeviceLocationChanged()
+                {
+                    myPosition.coordinate = DataManager.deviceLocation.coordinates
+                    map.addMyPositionIcon(myPosition.coordinate)
+                    //console.log("Direction: " + DataManager.deviceLocation.directionIsValid + ", " + DataManager.deviceLocation.direction)
+                }
+            }
         }
 
         // Car Icon
@@ -165,6 +169,10 @@ ApplicationWindow
             anchorPoint.y: myCarImg.height/2
         }
 
+        /*
+         * MAP FOOTER COVER
+           Simple black rectangle at the bottom to hide the unavoidable map footer
+         */
         Rectangle
         {
             id: footerCover
@@ -175,6 +183,9 @@ ApplicationWindow
             color: Qt.rgba(0/255, 0/255, 0/255, 1.0)
         }
 
+        /*
+         * BOTTOM TOOL BAR
+         */
         Rectangle
         {
             id: toolBar
@@ -218,7 +229,7 @@ ApplicationWindow
                             height: parent.height * 0.9
                             width: height
                             icon.color: "transparent"
-                            icon.source: "qrc:/resources/my_position.png"
+                            icon.source: "qrc:/resources/glasses_my_position.png"
                             icon.height: height * 0.75
                             icon.width: width * 0.75
                             opacity: 1.0
@@ -243,7 +254,7 @@ ApplicationWindow
                             height: parent.height * 0.9
                             width: height
                             icon.color: "transparent"
-                            icon.source: "qrc:/resources/car.png"
+                            icon.source: "qrc:/resources/glasses_car.png"
                             icon.height: height * 0.75
                             icon.width: width * 0.75
                             opacity: 1.0
@@ -252,6 +263,31 @@ ApplicationWindow
                             onClicked:
                             {
                                 map.centerMapOnMyCar()
+                            }
+                        }
+                    }
+                    Rectangle
+                    {
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: toolBar.height
+                        width: height
+                        color: "transparent"
+
+                        RoundButton
+                        {
+                            anchors.centerIn: parent
+                            height: parent.height * 0.9
+                            width: height
+                            icon.color: "transparent"
+                            icon.source: "qrc:/resources/set_car_in_my_position.png"
+                            icon.height: height * 0.75
+                            icon.width: width * 0.75
+                            opacity: 1.0
+                            palette { button: Qt.rgba(255/255, 255/255, 255/255, 0.4) }
+
+                            onClicked:
+                            {
+                                map.addCarIcon(myPosition.coordinate)
                             }
                         }
                     }
