@@ -1,6 +1,7 @@
 import QtQuick.Window 2.3
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.3
 import QtLocation 5.6
 import QtPositioning 5.6
 
@@ -34,13 +35,16 @@ ApplicationWindow
             //visibility = Window.Maximized
             x = 0
             y = 0
-            minimumWidth = 640
-            minimumHeight = 480
+            minimumWidth = 400
+            minimumHeight = 600
         }
 
         // Update Current Car Position on the map with the last known
         if(DataManager.currentCar.coordinates.latitude !== 0.0 || DataManager.currentCar.coordinates.longitude !== 0.0)
             map.addCarIcon(DataManager.currentCar.coordinates)
+
+        // Center map to the car Position
+        map.centerMapOnMyCar()
     }
 
     /*
@@ -91,6 +95,16 @@ ApplicationWindow
                 }
             }
 
+            // My postion to my car line
+            MapPolyline
+            {
+                id: lineMyPosToMyCar
+                visible: false
+                line.width: 2
+                line.color: 'green'
+                path: [ myPosition.coordinate, myCar.coordinate ]
+            }
+
             // Set the car position in the map
             function addMyPositionIcon(coordinates)
             {
@@ -116,8 +130,15 @@ ApplicationWindow
             {
                 map.center = myCar.coordinate
             }
+            function showDistanceToMyCar()
+            {
+                lineMyPosToMyCar.visible = true
+            }
+            function hideDistanceToMyCar()
+            {
+                lineMyPosToMyCar.visible = false
+            }
         }
-
 
         /*
          * MAP ICONS
@@ -170,6 +191,100 @@ ApplicationWindow
         }
 
         /*
+         * CONFIG PANEL (invisible by default)
+          */
+        Rectangle
+        {
+            id: configPanel
+            visible: false
+            anchors.fill: parent
+            color: Qt.rgba(0/255, 0/255, 0/255, 0.5)
+
+            Rectangle
+            {
+                id: configContent
+                anchors.centerIn: parent
+                height: parent.height * (1 - 2*toolBarHeightFactor)
+                width: parent.width * (1 - 2*toolBarHeightFactor)
+
+                color: "transparent"
+
+                Column
+                {
+                    id: configColumn
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    spacing: 5
+
+                    Row
+                    {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 0
+                        height: configContent.height/30
+
+                        Rectangle
+                        {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: configContent.width/2
+                            height: parent.height
+                            color: "transparent"
+                            Text
+                            {
+                                anchors.centerIn: parent
+                                font.pixelSize: parent.height
+                                width: parent.width
+                                wrapMode: Text.Wrap
+                                text: "Show line marker: "
+                                font.bold: true
+                                color: "white"
+                            }
+                        }
+                        Rectangle
+                        {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: configContent.width/2
+                            height: parent.height
+                            color: "transparent"
+                            CheckBox
+                            {
+                                id: checkbox
+                                anchors.centerIn: parent
+                                height: parent.height
+
+                                indicator: Rectangle
+                                {
+                                    anchors.centerIn: parent
+                                    implicitWidth: parent.height
+                                    implicitHeight: parent.height
+                                    radius: 1
+                                    color: "white"
+                                    border.color: "black"
+                                    border.width: 1
+                                    Rectangle
+                                    {
+                                        visible: checkbox.checked
+                                        anchors.centerIn: parent
+                                        width: parent.width*0.75
+                                        height: parent.height*0.75
+                                        color: "black"
+                                    }
+                                }
+
+                                onCheckedChanged:
+                                {
+                                    if(checked)
+                                        map.showDistanceToMyCar()
+                                    else
+                                        map.hideDistanceToMyCar()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
          * MAP FOOTER COVER
            Simple black rectangle at the bottom to hide the unavoidable map footer
          */
@@ -216,6 +331,7 @@ ApplicationWindow
                         height: toolBar.height
                         color: "transparent"
                     }
+                    // Show my (device) position button
                     Rectangle
                     {
                         anchors.verticalCenter: parent.verticalCenter
@@ -241,6 +357,7 @@ ApplicationWindow
                             }
                         }
                     }
+                    // Show my car position button
                     Rectangle
                     {
                         anchors.verticalCenter: parent.verticalCenter
@@ -266,6 +383,7 @@ ApplicationWindow
                             }
                         }
                     }
+                    // Set my car position button
                     Rectangle
                     {
                         anchors.verticalCenter: parent.verticalCenter
@@ -291,9 +409,34 @@ ApplicationWindow
                             }
                         }
                     }
+                    // Open config pannel
+                    Rectangle
+                    {
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: toolBar.height
+                        width: height
+                        color: "transparent"
+
+                        RoundButton
+                        {
+                            anchors.centerIn: parent
+                            height: parent.height * 0.9
+                            width: height
+                            icon.color: "transparent"
+                            icon.source: "qrc:/resources/config.png"
+                            icon.height: height * 0.65
+                            icon.width: width * 0.65
+                            opacity: 1.0
+                            palette { button: Qt.rgba(255/255, 255/255, 255/255, 0.4) }
+
+                            onClicked:
+                            {
+                                configPanel.visible = !configPanel.visible
+                            }
+                        }
+                    }
                 }
             }
-
         }
     }//background
 }

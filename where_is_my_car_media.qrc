@@ -7,5 +7,6 @@
         <file>resources/glasses_car.png</file>
         <file>resources/glasses_my_position.png</file>
         <file>resources/set_car_in_my_position.png</file>
+        <file>resources/config.png</file>
     </qresource>
 </RCC>

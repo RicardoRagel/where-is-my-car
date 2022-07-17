@@ -32,7 +32,7 @@ public:
     Q_PROPERTY(double degToRad READ degToRad NOTIFY degToRadChanged)
     double degToRad(){return deg2rad;}
 
-    double rad2deg = DEG2RAD;
+    double rad2deg = RAD2DEG;
     Q_PROPERTY(double radToDeg READ radToDeg NOTIFY radToDegChanged)
     double radToDeg(){return rad2deg;}
 
